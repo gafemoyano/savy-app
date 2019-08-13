@@ -1,19 +1,24 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react"
+import { ApolloClient } from "apollo-client"
+import { createHttpLink } from "apollo-link-http"
+import { InMemoryCache } from "apollo-cache-inmemory"
+import VenueScreen from "./src/components/VenueScreen"
+
+import { ApolloProvider } from "@apollo/react-hooks"
+
+export const link = createHttpLink({
+  uri: "/graphql"
+})
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link
+})
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
+    <ApolloProvider client={client}>
+      <VenueScreen />
+    </ApolloProvider>
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
