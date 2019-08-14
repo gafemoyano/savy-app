@@ -12,17 +12,17 @@ module.exports = {
       jsx: true // Allows for the parsing of JSX
     }
   },
+  plugins: ["@typescript-eslint", "react-hooks"],
   rules: {
     "@typescript-eslint/explicit-function-return-type": "off",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
     indent: "off",
-    "@typescript-eslint/indent": ["error", 2]
+    "@typescript-eslint/indent": ["error", 2],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   },
   settings: {
     react: {
       version: "detect" // Tells eslint-plugin-react to automatically detect the version of React to use
-    },
-    plugins: ["@typescript-eslint", "react-hooks"]
+    }
   }
 }
