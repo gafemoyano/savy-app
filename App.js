@@ -18,7 +18,7 @@ export default function App(props) {
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: new HttpLink({ uri: "http://127.0.0.1:3000/graphql" })
+  link: new HttpLink({ uri: "https://savy.co/graphql" })
 })
 
 const styles = StyleSheet.create({
