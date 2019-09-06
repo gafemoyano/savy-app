@@ -6,7 +6,7 @@ import { ApolloClient } from "apollo-client"
 import { HttpLink } from "apollo-link-http"
 import { InMemoryCache } from "apollo-cache-inmemory"
 
-export default function App(props) {
+export default function App() {
   return (
     <View style={styles.container}>
       <ApolloProvider client={client}>
@@ -18,7 +18,7 @@ export default function App(props) {
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: new HttpLink({ uri: "https://savy.co/graphql" })
+  link: new HttpLink({ uri: "http://192.168.0.13:3000/graphql" })
 })
 
 const styles = StyleSheet.create({

@@ -20,7 +20,7 @@ export default function HomeScreen(props) {
   }
   const { loading, error, data } = useQuery(ALL_VENUE_QUERY)
   if (loading) return <Text>Loading...</Text>
-  if (error) return <Text>Error!!</Text>
+  if (error) return <Text>`Error!!${error.toString()}`</Text>
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <ScrollView>
