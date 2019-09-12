@@ -11,12 +11,14 @@ const SIGN_IN_GOOGLE = gql`
     $email: String!
     $firstName: String!
     $lastName: String!
+    $expoToken: String!
   ) {
     signInGoogle(
       uid: $uid
       email: $email
       firstName: $firstName
       lastName: $lastName
+      expoToken: $expoToken
     ) {
       authenticationToken
     }
@@ -65,16 +67,17 @@ async function _signInSavyBackend(
   googleResponse
 ) {
   try {
+    const expoToken = await AsyncStorage.getItem('expoToken');
     const savyBackendResponse = await signInGoogleMutation({
       variables: {
         uid: googleResponse.user.id,
         email: googleResponse.user.email,
         firstName: googleResponse.user.givenName,
-        lastName: googleResponse.user.familyName
+        lastName: googleResponse.user.familyName,
+        expoToken: expoToken
       }
     })
-    Alert.alert(savyBackendResponse.data.signInGoogle.authenticationToken)
-    await AsyncStorage.setItem(
+    await AsyncStorage.setItem( 
       "userSessionToken",
       savyBackendResponse.data.signInGoogle.authenticationToken
     )

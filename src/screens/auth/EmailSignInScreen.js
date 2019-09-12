@@ -12,8 +12,8 @@ import {
 import { NavigationContext } from "react-navigation"
 
 const SIGN_IN_EMAIL = gql`
-  mutation signInEmail($email: String!, $password: String!) {
-    signInEmail(email: $email, password: $password) {
+  mutation signInEmail($email: String!, $password: String!, $expoToken: String!) {
+    signInEmail(email: $email, password: $password, expoToken: $expoToken) {
       authenticationToken
     }
   }
@@ -68,10 +68,12 @@ export default function EmailSignInScreen() {
 
 async function _signInAsync(navigation, email, password, signInEmailMutation) {
   try {
+    const expoToken = await AsyncStorage.getItem('expoToken');
     const savyBackendResponse = await signInEmailMutation({
       variables: {
         email: email,
-        password: password
+        password: password,
+        expoToken: expoToken
       }
     })
     await AsyncStorage.setItem(

@@ -1,9 +1,9 @@
-import { useMutation } from "@apollo/react-hooks"
-import * as Facebook from "expo-facebook"
-import gql from "graphql-tag"
-import React, { useContext } from "react"
-import { Alert, AsyncStorage, Button, Text, View } from "react-native"
-import { NavigationContext } from "react-navigation"
+import { useMutation } from "@apollo/react-hooks";
+import * as Facebook from "expo-facebook";
+import gql from "graphql-tag";
+import React, { useContext } from "react";
+import { Alert, AsyncStorage, Button, Text, View } from "react-native";
+import { NavigationContext } from "react-navigation";
 
 const SIGN_IN_FACEBOOK = gql`
   mutation signInFacebook(
@@ -12,6 +12,7 @@ const SIGN_IN_FACEBOOK = gql`
     $firstName: String!
     $middleName: String!
     $lastName: String!
+    $expoToken: String!
   ) {
     signInFacebook(
       uid: $uid
@@ -19,13 +20,16 @@ const SIGN_IN_FACEBOOK = gql`
       firstName: $firstName
       middleName: $middleName
       lastName: $lastName
+      expoToken: $expoToken
     ) {
       authenticationToken
     }
   }
 `
 
-export default function FacebookLogin() {
+export default function FacebookLogin(props) {
+  const { expoToken } = props
+
   const navigation = useContext(NavigationContext)
   const [signInFacebookMutation, { loading: mutationLoading }] = useMutation(
     SIGN_IN_FACEBOOK
@@ -75,13 +79,15 @@ async function _signInSavyBackend(
   faceBookResponse
 ) {
   try {
+    const expoToken = await AsyncStorage.getItem('expoToken');
     const savyBackendResponse = await signInFacebookMutation({
       variables: {
         uid: faceBookResponse.id,
         email: faceBookResponse.email,
         firstName: faceBookResponse.first_name,
-        middleName: faceBookResponse.middle_name,
-        lastName: faceBookResponse.last_name
+        middleName: faceBookResponse.middle_name != null ? faceBookResponse.middle_name : "",
+        lastName: faceBookResponse.last_name,
+        expoToken: expoToken
       }
     })
     await AsyncStorage.setItem(
@@ -90,6 +96,6 @@ async function _signInSavyBackend(
     )
     navigation.navigate("Explore")
   } catch ({ message }) {
-    Alert.alert(`Savy Backend: ${message.split(':').pop()}`)
+    Alert.alert(`Savy Backend: ${message.split(":").pop()}`)
   }
 }
