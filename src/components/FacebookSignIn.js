@@ -1,9 +1,9 @@
-import { useMutation } from "@apollo/react-hooks";
-import * as Facebook from "expo-facebook";
-import gql from "graphql-tag";
-import React, { useContext } from "react";
-import { Alert, AsyncStorage, Button, Text, View } from "react-native";
-import { NavigationContext } from "react-navigation";
+import { useMutation } from "@apollo/react-hooks"
+import * as Facebook from "expo-facebook"
+import gql from "graphql-tag"
+import React, { useContext } from "react"
+import { Alert, AsyncStorage, Button, Text, View } from "react-native"
+import { NavigationContext } from "react-navigation"
 
 const SIGN_IN_FACEBOOK = gql`
   mutation signInFacebook(
@@ -79,13 +79,16 @@ async function _signInSavyBackend(
   faceBookResponse
 ) {
   try {
-    const expoToken = await AsyncStorage.getItem('expoToken');
+    const expoToken = await AsyncStorage.getItem("expoToken")
     const savyBackendResponse = await signInFacebookMutation({
       variables: {
         uid: faceBookResponse.id,
         email: faceBookResponse.email,
         firstName: faceBookResponse.first_name,
-        middleName: faceBookResponse.middle_name != null ? faceBookResponse.middle_name : "",
+        middleName:
+          faceBookResponse.middle_name != null
+            ? faceBookResponse.middle_name
+            : "",
         lastName: faceBookResponse.last_name,
         expoToken: expoToken
       }
