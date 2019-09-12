@@ -1,15 +1,32 @@
-import React from "react"
-import { Ionicons } from "@expo/vector-icons"
+import React from 'react'
+import { Ionicons } from '@expo/vector-icons'
 import {
   createStackNavigator,
   createBottomTabNavigator,
   createAppContainer
-} from "react-navigation"
-import ExploreScreen from "../screens/ExploreScreen"
+} from 'react-navigation'
+import ExploreScreen from '../screens/ExploreScreen/ExploreScreen'
+import VenueDetails from '../screens/VenueDetails/VenueDetails'
+import { Colors, Typography } from '../styles'
 
-const ExploreStack = createStackNavigator({
-  Explore: { screen: ExploreScreen },
-})
+const ExploreStack = createStackNavigator(
+  {
+    Explore: { screen: ExploreScreen },
+    Details: { screen: VenueDetails }
+  },
+  {
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: Colors.gray700
+      },
+      headerTintColor: Colors.white,
+      headerTitleStyle: {
+        fontWeight: Typography.semibold,
+        fontSize: Typography.textBase
+      }
+    }
+  }
+)
 
 export default createAppContainer(
   createBottomTabNavigator(
@@ -21,8 +38,8 @@ export default createAppContainer(
         tabBarIcon: ({ focused, tintColor }) => {
           const { routeName } = navigation.state
           let iconName
-          if (routeName === "Explore") {
-            iconName = `ios-information-circle${focused ? "" : "-outline"}`
+          if (routeName === 'Explore') {
+            iconName = `ios-information-circle${focused ? '' : '-outline'}`
           }
           // You can return any component that you like here! We usually use an
           // icon component from react-native-vector-icons
@@ -30,8 +47,8 @@ export default createAppContainer(
         }
       }),
       tabBarOptions: {
-        activeTintColor: "tomato",
-        inactiveTintColor: "gray"
+        activeTintColor: 'tomato',
+        inactiveTintColor: 'gray'
       }
     }
   )

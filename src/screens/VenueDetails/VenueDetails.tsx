@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import gql from 'graphql-tag'
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native'
 import { useQuery } from '@apollo/react-hooks'
 import { Colors, Spacing, Typography, Radius, Shadows } from '../../styles'
-import { API_HOST } from '../../config'
 import ActivityList from './ActivityList'
+import {
+  NavigationScreenProp,
+  NavigationScreenProps,
+  NavigationScreenComponent
+} from 'react-navigation'
 
 const VENUE_QUERY = gql`
-  query VenueQuery {
-    venue(id: "fit-for-all-sede-calle-94") {
+  query VenueQuery($id: ID!) {
+    venue(id: $id) {
       id
       name
       city
@@ -30,16 +34,25 @@ const VENUE_QUERY = gql`
     }
   }
 `
+interface Params {
+  id: string
+}
 
-function VenueDetails() {
-  const { loading, error, data } = useQuery(VENUE_QUERY)
+const VenueDetails: NavigationScreenComponent<NavigationScreenProps> = ({
+  navigation
+}) => {
+  const venueId = navigation.getParam('id', 'NO-ID')
+
+  const { loading, error, data } = useQuery(VENUE_QUERY, {
+    variables: { id: venueId }
+  })
   if (loading) return <Text>Loading...</Text>
   if (error) return <Text>Error! ${error.message}</Text>
   let venue = data.venue
   let categories = venue.categories
   let activities = venue.activities
-  let coverUrl = `${API_HOST}${venue.cover}`
-  let logoUrl = `${API_HOST}${venue.logo}`
+  let coverUrl = `${venue.cover}`
+  let logoUrl = `${venue.logo}`
 
   return (
     <ScrollView style={styles.container}>
@@ -87,6 +100,9 @@ function VenueDetails() {
     </ScrollView>
   )
 }
+VenueDetails.navigationOptions = screenProps => ({
+  title: screenProps.navigation.getParam('name')
+})
 
 const styles = StyleSheet.create({
   container: {

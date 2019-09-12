@@ -1,6 +1,6 @@
 const config = {
   api: {
-    host: "http://192.168.0.29:3000",
+    host: 'https://savy.co/',
     timeout: 20000
   }
 }

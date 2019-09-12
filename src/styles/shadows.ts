@@ -47,3 +47,15 @@ export const xl = {
 
   elevation: 16
 }
+
+export const inset = {
+  shadowColor: Colors.black,
+  shadowOffset: {
+    width: 0,
+    height: 1
+  },
+  shadowOpacity: 0.2,
+  shadowRadius: 1.41,
+  borderWidth: 5,
+  borderColor: Colors.white
+}
