@@ -6,9 +6,11 @@ import {
   createAppContainer
 } from "react-navigation"
 import ExploreScreen from "../screens/ExploreScreen"
+import WebViewScreen from "../screens/WebViewScreen"
 
 const ExploreStack = createStackNavigator({
-  Explore: { screen: ExploreScreen },
+  Explore: ExploreScreen,
+  WebView: WebViewScreen
 })
 
 export default createAppContainer(

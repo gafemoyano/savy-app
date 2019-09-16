@@ -13,7 +13,7 @@ const ALL_VENUE_QUERY = gql`
   }
 `
 
-export default function HomeScreen(props) {
+export default function ExploreScreen(props) {
   _signOutAsync = async () => {
     await AsyncStorage.clear()
     props.navigation.navigate("Auth")
@@ -32,3 +32,10 @@ export default function HomeScreen(props) {
     </View>
   )
 }
+
+ExploreScreen.navigationOptions = ({ navigation }) => ({
+  headerTitle: <Text> 🦊</Text>,
+  headerRight: (
+    <Button onPress={() => navigation.navigate("WebView")} title="WebView" />
+  )
+})
