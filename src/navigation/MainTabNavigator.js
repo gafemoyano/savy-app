@@ -1,38 +1,56 @@
 import React from "react"
-import { Ionicons } from "@expo/vector-icons"
+import { MaterialIcons } from "@expo/vector-icons"
 import {
   createStackNavigator,
   createBottomTabNavigator,
   createAppContainer
 } from "react-navigation"
 import ExploreScreen from "../screens/ExploreScreen"
+import MainProfileScreen from "../screens/profile/MainProfileScreen"
+import GenericModal from "../modals/GenericModal"
 
 const ExploreStack = createStackNavigator({
-  Explore: { screen: ExploreScreen },
+  Explore: ExploreScreen
 })
 
+const ProfileStack = createStackNavigator({
+  MainProfile: MainProfileScreen
+})
+
+const TabNavigatior = createBottomTabNavigator(
+  {
+    Explore: ExploreStack,
+    Profile: ProfileStack
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ tintColor }) => {
+        const { routeName } = navigation.state
+        let iconName
+        if (routeName === "Explore") {
+          iconName = `explore`
+        } else {
+          iconName = `account-circle`
+        }
+        return <MaterialIcons name={iconName} size={25} color={tintColor} />
+      }
+    }),
+    tabBarOptions: {
+      activeTintColor: "tomato",
+      inactiveTintColor: "gray"
+    }
+  }
+)
+
 export default createAppContainer(
-  createBottomTabNavigator(
+  createStackNavigator(
     {
-      Explore: { screen: ExploreStack }
+      MainTabNavigator: TabNavigatior,
+      GenericModal: GenericModal
     },
     {
-      defaultNavigationOptions: ({ navigation }) => ({
-        tabBarIcon: ({ focused, tintColor }) => {
-          const { routeName } = navigation.state
-          let iconName
-          if (routeName === "Explore") {
-            iconName = `ios-information-circle${focused ? "" : "-outline"}`
-          }
-          // You can return any component that you like here! We usually use an
-          // icon component from react-native-vector-icons
-          return <Ionicons name={iconName} size={25} color={tintColor} />
-        }
-      }),
-      tabBarOptions: {
-        activeTintColor: "tomato",
-        inactiveTintColor: "gray"
-      }
+      mode: "card",
+      headerMode: "none"
     }
   )
 )

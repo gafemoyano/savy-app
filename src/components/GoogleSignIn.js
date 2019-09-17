@@ -25,7 +25,7 @@ const SIGN_IN_GOOGLE = gql`
   }
 `
 
-export default function GoogleLogin() {
+export default function GoogleSignIn() {
   const navigation = useContext(NavigationContext)
   const [signInGoogleMutation, { loading: mutationLoading }] = useMutation(
     SIGN_IN_GOOGLE
@@ -67,7 +67,7 @@ async function _signInSavyBackend(
   googleResponse
 ) {
   try {
-    const expoToken = await AsyncStorage.getItem('expoToken');
+    const expoToken = await AsyncStorage.getItem("expoToken")
     const savyBackendResponse = await signInGoogleMutation({
       variables: {
         uid: googleResponse.user.id,
@@ -77,12 +77,12 @@ async function _signInSavyBackend(
         expoToken: expoToken
       }
     })
-    await AsyncStorage.setItem( 
+    await AsyncStorage.setItem(
       "userSessionToken",
       savyBackendResponse.data.signInGoogle.authenticationToken
     )
     navigation.navigate("Explore")
   } catch ({ message }) {
-    Alert.alert(`Savy Backend: ${message.split(':').pop()}`)
+    Alert.alert(`Savy Backend: ${message.split(":").pop()}`)
   }
 }

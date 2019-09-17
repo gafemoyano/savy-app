@@ -27,9 +27,7 @@ const SIGN_IN_FACEBOOK = gql`
   }
 `
 
-export default function FacebookLogin(props) {
-  const { expoToken } = props
-
+export default function FacebookSignIn() {
   const navigation = useContext(NavigationContext)
   const [signInFacebookMutation, { loading: mutationLoading }] = useMutation(
     SIGN_IN_FACEBOOK

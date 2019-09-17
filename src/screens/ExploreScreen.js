@@ -1,7 +1,7 @@
-import React from "react"
-import gql from "graphql-tag"
 import { useQuery } from "@apollo/react-hooks"
-import { Text, View, ScrollView, Button, AsyncStorage } from "react-native"
+import gql from "graphql-tag"
+import React from "react"
+import { AsyncStorage, Button, ScrollView, Text, View } from "react-native"
 
 const ALL_VENUE_QUERY = gql`
   query AllVenueQuery {
