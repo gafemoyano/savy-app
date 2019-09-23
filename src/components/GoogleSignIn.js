@@ -21,6 +21,7 @@ const SIGN_IN_GOOGLE = gql`
       expoToken: $expoToken
     ) {
       authenticationToken
+      profileId
     }
   }
 `
@@ -80,6 +81,10 @@ async function _signInSavyBackend(
     await AsyncStorage.setItem(
       "userSessionToken",
       savyBackendResponse.data.signInGoogle.authenticationToken
+    )
+    await AsyncStorage.setItem(
+      "userSessionProfileId",
+      savyBackendResponse.data.signInGoogle.profileId
     )
     navigation.navigate("Explore")
   } catch ({ message }) {
