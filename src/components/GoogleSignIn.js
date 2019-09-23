@@ -81,6 +81,10 @@ async function _signInSavyBackend(
       "userSessionToken",
       savyBackendResponse.data.signInGoogle.authenticationToken
     )
+    await AsyncStorage.setItem(
+      "userSessionProfileId",
+      savyBackendResponse.data.signInEmail.profileId
+    )
     navigation.navigate("Explore")
   } catch ({ message }) {
     Alert.alert(`Savy Backend: ${message.split(":").pop()}`)

@@ -95,6 +95,10 @@ async function _signInSavyBackend(
       "userSessionToken",
       savyBackendResponse.data.signInFacebook.authenticationToken
     )
+    await AsyncStorage.setItem(
+      "userSessionProfileId",
+      savyBackendResponse.data.signInEmail.profileId
+    )
     navigation.navigate("Explore")
   } catch ({ message }) {
     Alert.alert(`Savy Backend: ${message.split(":").pop()}`)
