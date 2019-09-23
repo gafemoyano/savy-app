@@ -19,6 +19,7 @@ const SIGN_IN_EMAIL = gql`
   ) {
     signInEmail(email: $email, password: $password, expoToken: $expoToken) {
       authenticationToken
+      profileId
     }
   }
 `

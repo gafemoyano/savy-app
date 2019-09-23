@@ -23,6 +23,7 @@ const SIGN_IN_FACEBOOK = gql`
       expoToken: $expoToken
     ) {
       authenticationToken
+      profileId
     }
   }
 `
@@ -97,7 +98,7 @@ async function _signInSavyBackend(
     )
     await AsyncStorage.setItem(
       "userSessionProfileId",
-      savyBackendResponse.data.signInEmail.profileId
+      savyBackendResponse.data.signInFacebook.profileId
     )
     navigation.navigate("Explore")
   } catch ({ message }) {
