@@ -1,156 +1,108 @@
-import React, { useState } from "react"
-import { Text, View, AsyncStorage, Alert, TextInput, Button } from "react-native"
-import { useQuery, useMutation } from "@apollo/react-hooks"
+import { useMutation, useQuery } from "@apollo/react-hooks"
 import gql from "graphql-tag"
+import React, { useState } from "react"
+import {
+  Alert,
+  AsyncStorage,
+  Button,
+  Text,
+  TextInput,
+  View
+} from "react-native"
 
 const PROFILE_DATA_QUERY = gql`
-  query Profile {
-    profile(id:4){
+  query Profile($id: ID!) {
+    profile(id: $id) {
       name
-      lastName   
-      countryCode 	
+      lastName
+      countryCode
       cellphone
       documentType
       document
       birthday
-      gender      
+      gender
     }
-  }`
-
-  const PROFILE_DATA_MUTATION = gql`
-  mutation profileEdit(
-    $name:String!,
-    $lastName:String!,
-    $countryCode:String!,
-    $cellphone:String!,                      
-    $documentType:String!,
-    $document:String!,
-    $birthday:String!,
-    $gender:String!,
-    $profileId: String!) 
-    {
-    profileEdit(
-      id:4,
-      name:$name,
-      lastName:$lastName,
-      countryCode:$countryCode,
-      cellPhone:$cellphone,            
-      documentType:$documentType,
-      document:$document,
-      birthday:$birthday,
-      gender:$gender,
-      profileId:$profileId)   
   }
 `
 
-export default function EditProfileScreen(props) {
-  const [name, setName] = useState('')
-  const [lastName, setlastName] = useState('')
-  const [countryCode, setcountryCode] = useState('')
-  const [cellPhone, setcellPhone] = useState('')
-  const [documentType, setdocumentType] = useState('')
-  const [document, setdocument] = useState('')
-  const [birthday, setbirthday] = useState('')
-  const [gender, setgender] = useState('')
-  
-  const {loading, error, data} = useQuery(PROFILE_DATA_QUERY)
-  
-  const [profileEditMutation, {errorMutation, mutationLoading}] = useMutation(PROFILE_DATA_MUTATION)
+const PROFILE_DATA_MUTATION = gql`
+  mutation profileEdit(
+    $id: ID!
+    $name: String!
+    $lastName: String!
+    $countryCode: String!
+    $cellPhone: String!
+    $documentType: String!
+    $document: String!
+    $birthday: String!
+    $gender: String!
+  ) {
+    profileEdit(
+      id: $id
+      name: $name
+      lastName: $lastName
+      countryCode: $countryCode
+      cellPhone: $cellPhone
+      documentType: $documentType
+      document: $document
+      birthday: $birthday
+      gender: $gender
+    ) {
+      message
+    }
+  }
+`
 
-  
+export default function EditProfileScreen() {
+  const [name, setName] = useState("")
+  const { loading, error } = useQuery(PROFILE_DATA_QUERY, {
+    variables: { id: 123 },
+    onCompleted: data => setName(data.profile.name)
+  })
+  const [profileEditMutation, { mutationLoading }] = useMutation(
+    PROFILE_DATA_MUTATION
+  )
   if (loading) return <Text>Loading...</Text>
   if (error) return <Text>`Error!!${error.toString()}`</Text>
-  
-  if (errorMutation) return <Text>`Error!!${error.toString()}`</Text>
   if (mutationLoading) return <Text>Loading Mutation...</Text>
-  
-  const profile = data.profile
-
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Edita tus datos</Text>    
+      <Text>Edita tus datos</Text>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View>
           <Text> Nombre:</Text>
-          <TextInput 
+          <TextInput
             value={name}
-            onChange={name => setName(name.target.value)}>{` ${profile.name}` }</TextInput>
-          <Text> Apellido:</Text>
-          <TextInput
-            value={lastName}
-            onChange ={lastName => setlastName(lastName.target.value)}>{` ${profile.lastName}`}</TextInput>
-          <Text>Country Code:</Text>
-          <TextInput
-            value={countryCode}
-            onChange ={countryCode => setcountryCode(countryCode.target.value)}>{` ${profile.countryCode}`}</TextInput>
-          <Text>Celular:</Text>
-          <TextInput
-            value={cellPhone}
-            onChange ={cellPhone => setcellPhone(cellPhone.target.value)}>{` ${profile.cellphone}`}</TextInput>
-          <Text>Tipo de documento:</Text>
-           <TextInput
-              value={documentType}
-              onChange ={documentType => setdocument(documentType.target.value)}>{` ${profile.document}`}</TextInput>
-          <Text>Documento: </Text>
-            <TextInput
-            value={document}
-            onChange ={document => setdocument(document.target.value)}>{` ${profile.document}`}</TextInput>
-          <Text>Cumpleaños:</Text>   
-          <TextInput
-            value={birthday}
-            onChange ={birthday => setbirthday(birthday.target.value)}>{` ${profile.birthday}`}</TextInput>   
-          <Text> Genero:</Text>   
-          <TextInput
-            value={gender}
-            onChange ={gender => setgender(gender.target.value)}>{` ${profile.gender}`}</TextInput>    
-          <Button title="Guardar"
-                  onPress={()=> _saveChangesAsync(
-                                                  name,
-                                                  lastName, 
-                                                  countryCode, 
-                                                  cellPhone, 
-                                                  documentType,
-                                                  document, 
-                                                  birthday, 
-                                                  gender,
-                                                  profileEditMutation)}/>            
+            onChangeText={name => setName(name)}></TextInput>
+          <Button
+            title="Guardar"
+            onPress={() => _saveChangesAsync(name, profileEditMutation)}
+          />
         </View>
-        
-      </View>        
+      </View>
     </View>
   )
 }
 
-async function _saveChangesAsync(
-                                name, 
-                                lastName, 
-                                countryCode, 
-                                cellPhone, 
-                                documentType, 
-                                document, 
-                                birthday, 
-                                gender, 
-                                profileEditMutation){
-  try{
-    const profileId =  await AsyncStorage.getItem("profileId")
+async function _saveChangesAsync(name, profileEditMutation) {
+  try {
+    const profileId = await AsyncStorage.getItem("userSessionProfileId")
     const savyBackendSaveChanges = await profileEditMutation({
       variables: {
-        name:name,
-        lastName:lastName,
-        countryCode:countryCode,
-        cellPhone:cellPhone,
-        documentType:documentType,
-        document:document,
-        birthday:birthday,
-        gender:gender,
-        profileId: profileId
-      }, 
-      refetchQueries:["Profile"]
+        id: 123,
+        name: name,
+        lastName: "Mckenzy",
+        countryCode: "57",
+        cellPhone: "12345678",
+        documentType: "CC",
+        document: "12345678",
+        birthday: "",
+        gender: ""
+      },
+      refetchQueries: () => ["Profile"]
     })
-    await AsyncStorage.setItem("userSessionProfileId")
-     savyBackendSaveChanges.data.profileEdit.profileId
-  }
-  catch ({ message }) {
+    Alert.alert(`¡Se actualizo tu perfil!`)
+  } catch ({ message }) {
     Alert.alert(`SPE: ${message.split(":").pop()}`)
   }
 }
