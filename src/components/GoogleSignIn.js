@@ -4,7 +4,6 @@ import gql from "graphql-tag"
 import React, { useContext } from "react"
 import { Alert, AsyncStorage, Button, Text, View } from "react-native"
 import { NavigationContext } from "react-navigation"
-import RNPickerSelect from 'react-native-picker-select';
 
 const SIGN_IN_GOOGLE = gql`
   mutation signInGoogle(

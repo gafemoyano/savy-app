@@ -1,17 +1,15 @@
-
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import React, { useState, useEffect} from "react"
-import RNPickerSelect from 'react-native-picker-select'
 import {
   Alert,
   AsyncStorage,
   Button,
+  Picker,
   Text,
   TextInput,
   View
 } from "react-native"
-import {useNavigation} from "react-navigation"
 
 const PROFILE_DATA_QUERY = gql`
   query Profile($id: ID!) {
@@ -115,6 +113,7 @@ export default function EditProfileScreen() {
         <Button
             title="Guardar"
             onPress={() => _saveChangesAsync(
+                                            profileId,
                                             name, 
                                             lastName, 
                                             documentType, 
@@ -142,18 +141,17 @@ export default function EditProfileScreen() {
           <TextInput
             value={lastName}
             onChangeText={lastName => setLastName(lastName)}></TextInput>
-          <View style={{ alignItems:"flex-start", width:90}}>
+          <View style={{ alignItems:"flex-start", width:90, marginHorizontal:20}}>
             <Text> Tipo:</Text>
-            <RNPickerSelect
-              value={documentType}
-              onValueChange={(documentType) => setDocumentType(documentType)}
-              items={[
-                  { label: 'CC', value: 'CC' },
-                  { label: 'TI', value: 'TI' },
-                  { label: 'PP', value: 'PP' },
-                  { label: 'CE', value: 'CE' },
-              ]}
-            />
+            <Picker
+              selectedValue={documentType}
+              style={{height: 50, width: 100}}
+              onValueChange={(documentType) => setDocumentType(documentType)}>
+                <Picker.Item label="CC" value="CC"/>
+                <Picker.Item label="TI" value="TI"/>
+                <Picker.Item label="PP" value="PP"/>
+                <Picker.Item label="CE" value="CE"/>
+              </Picker>
           </View>
           <View style={{ alignSelf:"flex-end", marginVertical:-68, marginHorizontal:90}}>
             <Text> Identificación:</Text>
@@ -179,15 +177,14 @@ export default function EditProfileScreen() {
               value={birthday}
               onChangeText={birthday => setBirthday(birthday)}></TextInput>  
             <Text> Genero:</Text>
-            <RNPickerSelect
-              value={gender}
-              onValueChange={(gender) => setGender(gender)}
-              items={[
-                  { label: 'Hombre', value: 'male' },
-                  { label: 'Mujer', value: 'female' },
-                  { label: 'Otro', value: 'other' },
-              ]}
-            />    
+            <Picker
+              selectedValue={gender}
+              style={{height: 50, width: 300}}
+              onValueChange={(gender) => setGender(gender)}>
+                <Picker.Item label="Hombre" value="male"/>
+                <Picker.Item label="Mujer" value="female"/>
+                <Picker.Item label="Otro" value="other"/>
+              </Picker> 
           </View> 
         </View>
       </View>
@@ -196,6 +193,7 @@ export default function EditProfileScreen() {
 }
 
 async function _saveChangesAsync(
+                                profileId,
                                 name, 
                                 lastName, 
                                 documentType, 
@@ -208,7 +206,6 @@ async function _saveChangesAsync(
                                 ) 
 {
   try {       
-    const profileId = await AsyncStorage.getItem("userSessionProfileId")
     const savyBackendSaveChanges = await profileEditMutation({
       variables: {
         id: profileId,
@@ -225,7 +222,7 @@ async function _saveChangesAsync(
     })
     Alert.alert(`¡Se actualizo tu perfil!`)
   } catch ({ message }) {
-    Alert.alert(`SPE: ${message.split(":").pop()}`)
+    Alert.alert(`Savy Profile Edit: ${message.split(":").pop()}`)
   }
 }
 
