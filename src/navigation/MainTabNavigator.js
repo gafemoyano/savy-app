@@ -16,8 +16,20 @@ const ExploreStack = createStackNavigator({
 
 const ProfileStack = createStackNavigator({
   MainProfile: MainProfileScreen,
-  EditProfile: EditProfileScreen
+  EditProfile: EditProfileScreen  
 })
+
+ProfileStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  for (let i = 0; i < navigation.state.routes.length; i++) {
+    if (navigation.state.routes[i].routeName == "EditProfile") {
+      tabBarVisible = false;
+    }
+  }
+  return {
+    tabBarVisible
+  }
+}
 
 const TabNavigatior = createBottomTabNavigator(
   {
