@@ -8,14 +8,28 @@ import {
 import ExploreScreen from "../screens/ExploreScreen"
 import MainProfileScreen from "../screens/profile/MainProfileScreen"
 import GenericModal from "../modals/GenericModal"
+import EditProfileScreen from "../screens/profile/EditProfileScreen"
 
 const ExploreStack = createStackNavigator({
   Explore: ExploreScreen
 })
 
 const ProfileStack = createStackNavigator({
-  MainProfile: MainProfileScreen
+  MainProfile: MainProfileScreen,
+  EditProfile: EditProfileScreen  
 })
+
+ProfileStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  for (let i = 0; i < navigation.state.routes.length; i++) {
+    if (navigation.state.routes[i].routeName == "EditProfile") {
+      tabBarVisible = false;
+    }
+  }
+  return {
+    tabBarVisible
+  }
+}
 
 const TabNavigatior = createBottomTabNavigator(
   {
